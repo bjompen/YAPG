@@ -10,10 +10,14 @@ function New-YapgPassword {
         [switch]$Capitalize,
 
         [Parameter()]
-        [string]$Dictionary = "en-GB.dic"
+        [switch]$Leet,
+
+        [Parameter()]
+        [string]$Dictionary = "$PSScriptRoot\en-GB.dic"
     )
 
-    $AllWords = Get-Content $Dictionary
+    $AllWords = ([System.IO.StreamReader]::new($Dictionary).ReadToEnd()).Split("`n").Where({$_ -match '^[a-zA-Z]'})
+
     [array]$Words = 1..$WordCount | foreach {
         $CurrWord = ($AllWords | Get-Random).split('/')[0]
         If ($Capitalize) {
@@ -33,5 +37,11 @@ function New-YapgPassword {
             $Words[$_] = "$($Words[$_])$(GenerateChar)" 
         }
     }
-    -join $Words
+    
+    if ($Leet) {
+        -join ($Words -creplace 'l','1' -creplace 'e','3' -creplace 't','7' -creplace 'o','0')
+    }
+    else { 
+        -join $Words
+    }
 }

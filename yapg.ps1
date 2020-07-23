@@ -23,7 +23,7 @@ function New-YapgPassword {
 
     1.. $Passwords | ForEach-Object { 
         [array]$Words = 1..$WordCount | ForEach-Object {
-            $CurrWord = ($AllWords | Get-Random).split('/')[0]
+            $CurrWord = ($AllWords | Get-Random).split('/')[0].Trim()
             If ($Capitalize) {
                 $CurrWord = $CurrWord.ToCharArray()
                 $i = Get-Random -Minimum 0 -Maximum $CurrWord.Count

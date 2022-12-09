@@ -98,7 +98,7 @@ PrivateData = @{
         Tags = @(
             'Password',
             'YAPG',
-            'Password generator'
+            'PasswordGenerator'
         )
 
         # A URL to the license for this module.

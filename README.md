@@ -13,6 +13,8 @@ It generates passwords, but instead of totally random it uses a wordlist which m
 included in the repo is the wordlist from Mozilla brittish english dict by
 [Marco A.G.Pinto](https://github.com/marcoagpinto/aoo-mozilla-en-dict/tree/master/en_GB%20(Marco%20Pinto)), licensed under LGPL.
 
+Also included swedish dictionary `sv-SE.dic` from [wooorm](https://github.com/wooorm/dictionaries) licensed under MIT
+
 This command will output your passwords in clear text! If you are going to use them in scripts and needs them encrypted you need to manage it yourself.
 
 ```PowerShell

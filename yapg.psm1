@@ -1,3 +1,6 @@
+$Script:ModuleWords = ([System.IO.StreamReader]::new("$PSScriptRoot\en-GB.dic").ReadToEnd()).Split("`n").Where({$_ -match '^[a-zA-Z]'})
+
+
 <#
 .SYNOPSIS
     Generates a password based on a known wordlist
@@ -50,6 +53,23 @@
     'Clerm0nt-F3rR4nd-3m1liaN0'
     'QRpedi4'l1n01eniC'
     '0r64nel1e"1nfomerC1a1'
+
+
+.EXAMPLE
+    PS> New-YapgPassword -Dictionary (Get-Module yapg | % Path).Replace('yapg.psm1','sv-SE.dic') -Passwords 10
+
+    Will output a password using the included swedish dictionary in the module path. Examples:
+    klavertrampgatubrottslighetgruppdiskussionsametingsval
+    'vallacheftablåstorforsEast'
+    'fingeringpjuckBjärnumbukgjord'
+    'samhällsinformationbalkongdörrträhusankfötter'
+    'vuxenblivandeJosefinaskitsnackspecialistsjukhus'
+    'slurkvittnesuppgiftgitarrstämmareallmängiltighet'
+    'starungeimporteringsmåäterbouppgivare'
+    'fostermodernewfoundlandshunduppstöttningterror'
+    'redarhamitiskNicolinajakthistoria'
+    'Tybbleutredningsledarehypokloritsyralitegrann'
+
 #>
 
 
@@ -68,7 +88,11 @@ function New-YapgPassword {
         [switch]$Leet,
 
         [Parameter()]
-        [string]$Dictionary = "$PSScriptRoot\en-GB.dic",
+        [ValidateScript({
+            (Test-Path -Path $_) -and
+            ((Get-Item $_ | Select-Object -ExpandProperty Extension) -eq '.dic')
+        })]
+        [string]$Dictionary,
 
         [Parameter()]
         [int]$Passwords = 1
@@ -135,7 +159,14 @@ function New-YapgPassword {
             -join $r
         }
      
-        $AllWords = ([System.IO.StreamReader]::new($Dictionary).ReadToEnd()).Split("`n").Where({$_ -match '^[a-zA-Z]'})
+        if (-not [string]::IsNullOrEmpty($Dictionary)) {
+            $Dictionary = Get-Item -Path $Dictionary | Select-Object -ExpandProperty FullName
+            $AllWords  = ([System.IO.StreamReader]::new($Dictionary).ReadToEnd()).Split("`n").Where({$_ -match '^[a-zA-Z]'})
+        }
+        else {
+            $AllWords = $Script:ModuleWords
+        }
+
     }
 
     process {
